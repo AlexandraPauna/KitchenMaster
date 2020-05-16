@@ -23,6 +23,9 @@ public class Rating {
     @ManyToOne
     private Recipe recipe;
 
+    @ManyToOne
+    private User user;
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date date;
 }

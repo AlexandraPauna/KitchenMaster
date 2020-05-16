@@ -8,11 +8,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +27,7 @@ public class Recipe {
     private Integer id;
 
     @Column(name = "date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private Date date;
 
     @Column(name = "name")
@@ -42,24 +42,24 @@ public class Recipe {
 
     @Column(name = "calories")
     @Min(value = 1, message = "Must be greater than zero")
-    @NotEmpty(message = "*Please provide calories for recipe!")
+    @NotNull(message = "*Please provide calories for recipe!")
     private Integer calories;
 
     @Column(name = "serving")
     @Min(value = 1, message = "Must be greater than zero")
-    @NotEmpty(message = "*Please provide number of servings!")
+    @NotNull(message = "*Please provide number of servings!")
     private Integer serving;
 
     @Column(name = "preparation_time")
     @Min(value = 1, message = "Must be greater than zero")
-    @NotEmpty(message = "*Please provide the time needed for preparation!")
+    @NotNull(message = "*Please provide the time needed for preparation!")
     private Integer preparation_time;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Info info;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "recipe_category", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(name = "recipe_category", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<Category>();
 
     @ManyToOne
