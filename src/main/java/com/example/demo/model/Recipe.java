@@ -36,8 +36,8 @@ public class Recipe {
     private String name;
 
     @Column(name = "description")
-    @Length(min = 5, message = "*Recipe description must have at least 3 characters!")
-    @NotEmpty(message = "*Please provide a recipe description!")
+    @Length(min = 5, message = "*Recipe description must have at least 5 characters!")
+    @NotEmpty(message = "*Please provide a recipe ingredients description!")
     private String description;
 
     @Column(name = "calories")
@@ -60,6 +60,7 @@ public class Recipe {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "recipe_category", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @NotEmpty(message = "*Please provide at least one category!")
     private Set<Category> categories = new HashSet<Category>();
 
     @ManyToOne

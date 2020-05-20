@@ -1,0 +1,100 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:javascript="http://www.w3.org/1999/xhtml">
+<body>
+<div th:fragment="header" class="header">
+    <nav class="navbar  fixed-top navbar-site navbar-light bg-light navbar-expand-md"
+         role="navigation">
+        <div class="container">
+
+            <div class="navbar-identity">
+
+
+                <a th:href="@{/home/index}" class="navbar-brand logo logo-title">
+        			<span class="logo-icon"><i class="icon icon-search-1 ln-shadow-logo "></i>
+        			</span>KITCHEN<span>MASTER </span> </a>
+
+                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggler pull-right"
+                        type="button">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/></svg>
+                </button>
+
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="nav-item"><a th:href="@{/home/index}">Home</a></li>
+                    <li class="nav-item"><a th:href="@{/category/index}">Categories</a></li>
+
+                </ul>
+                <ul th:if="${isAuth == 'true'}" class="nav navbar-nav ml-auto navbar-right">
+
+                    <li class="dropdown no-arrow nav-item">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown">
+                            <span th:utext="${loggedUser.userName}"></span>
+                            <i class="icon-user fa"></i> <i class=" icon-down-open-big fa"></i>
+                        </a>
+                        <ul class="dropdown-menu user-menu dropdown-menu-right">
+                            <li class="active dropdown-item">
+                                <a th:href="@{/manage/index}">
+                                    <i class="icon-home"></i> My profile</a>
+                            </li>
+                            <li th:if="${role == 'USER'}" class="dropdown-item" >
+                                <a th:href="@{/manage/profile}">
+                                    <i class="icon-pencil"></i> Edit profile </a>
+                            </li>
+                            <li th:if="${role == 'USER'}" class="dropdown-item" >
+                                <a th:href="@{/recipe/personal}">
+                                    <i class="icon-th-thumb"></i> My recipes </a>
+                            </li>
+                            <li th:if="${role == 'USER'}" class="dropdown-item" >
+                                <a th:href="@{/rating/index}">
+                                    <i class="icon-star"></i> My ratings </a>
+                            </li>
+                            <li class="dropdown-item">
+                                <form th:action="@{/logout}" method="get" id = "logoutForm">
+                                    <a href="javascript:document.getElementById('logoutForm').submit()"
+                                       type="Submit"><i class=" icon-logout "></i> Logout
+                                    </a>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li th:if="${role == 'USER'}" class="postadd nav-item">
+                        <a class="btn btn-block   btn-border btn-post btn-success nav-link"
+                           th:href="@{/recipe/add}">Add Recipe</a>
+                    </li>
+
+                    <li th:if="${role == 'ADMIN'}" class="dropdown no-arrow nav-item">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown">
+                            <span>Add</span> <i class="icon-plus"></i> <i class=" icon-down-open-big fa"></i>
+                        </a>
+
+                        <ul class="dropdown-menu user-menu dropdown-menu-right">
+                            <li class="dropdown-item">
+                                <a th:href="@{/category/new}">
+                                    <i class="icon-th-thumb"></i> Category
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul th:if="${isAuth == 'false'}" class="nav navbar-nav ml-auto navbar-right">
+                    <li class="nav-item">
+                        <a th:action="@{/registration}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:action="@{/login}">Login</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</div>
+<!-- /.header -->
+</body>
+</html>

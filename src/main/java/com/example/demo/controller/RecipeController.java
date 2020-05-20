@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Category;
 import com.example.demo.model.Recipe;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.RecipeService;
@@ -41,26 +42,42 @@ public class RecipeController {
         return "/recipe/index";
     }
 
-    @RequestMapping(value = "/recipe/new", method = RequestMethod.GET)
+    @RequestMapping(value = "/recipe/add", method = RequestMethod.GET)
     public String newRecipe(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
+
         List<Category> categories = categoryService.getAllCategories();
         categoryCache = new HashMap<String, Category>();
         for (Category category : categories) {
             categoryCache.put(category.getCategory_id().toString(), category);
         }
-
         model.addAttribute("categoriesList", categoryService.getAllCategories());
-        Recipe recipe = new Recipe();
 
+        Recipe recipe = new Recipe();
         model.addAttribute("recipe", recipe);
 
-        return "/recipe/new";
+        return "/recipe/add";
     }
 
-    @RequestMapping(value = "/recipe/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/recipe/add", method = RequestMethod.POST)
     public String savedRecipe(@Valid Recipe recipe, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "error";
+            if(recipe.getCategories() != null){
+                model.addAttribute("categories", recipe.getCategories());
+            }
+            model.addAttribute("categoriesList", categoryService.getAllCategories());
+
+            return "/recipe/add";
         }
         recipe.setScore(0);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
