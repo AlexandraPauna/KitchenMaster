@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}">
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+<h1>Categories</h1>
+<div th:each="category : ${categories}" class="panel panel-default">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <p th:text="${category.category_id}"> Id</p>
+
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${category.name}"> Name</p>
+                </div>
+                <div>
+                    <a href="#" th:href="@{'/category/' + ${category.category_id} + '/delete'}">Delete</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="col-md-6 ">
+    <a class="btn btn-default" href="#" role="button" th:href="@{'/category/new'}">Add Category</a>
+</div>
+</body>
+</html>
