@@ -69,7 +69,7 @@ public class Recipe {
 
     @Column(name = "score")
     @Value("${score:0}")
-    private Integer score;
+    private Double score;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Rating> ratings = new HashSet<Rating>();
