@@ -13,8 +13,23 @@
 <body>
 <h1>Recipes</h1>
 <div th:each="recipe : ${recipes}" class="panel panel-default">
-    <div th:text="Name:  ${recipe.date}" class="panel-heading"></div>
-    <div class="panel-body">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <p th:text="${recipe.id}"> Id</p>
+
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${recipe.name}"> Name</p>
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${recipe.date}"> Id</p>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 </body>

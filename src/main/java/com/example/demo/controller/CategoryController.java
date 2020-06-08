@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Category;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
@@ -30,7 +31,12 @@ public class CategoryController {
 
     @RequestMapping(value = "/category/index", method = RequestMethod.GET)
     public String allCategories(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("role",role);
         return "/category/index";
     }
 
@@ -53,6 +59,53 @@ public class CategoryController {
         allCategories(model);
         return "/category/index";
     }
+
+    @RequestMapping(value = "/category/update/{id}", method = RequestMethod.GET)
+    public String updateCategory(Model model,@PathVariable int id) {
+        Category category = categoryService.findById(id);;
+        model.addAttribute("category", category);
+        return "/category/update";
+    }
+
+    /*
+    @RequestMapping(value= "/category/update/{id}", method= RequestMethod.PUT)
+    public Category updateCategory(@RequestBody Category updCategory, @PathVariable int id) throws Exception {
+        System.out.println(this.getClass().getSimpleName() + " - Update employee details by id is invoked.");
+
+        Category category =  categoryService.findById(id);
+        //if (!category.isPresent())
+            //throw new Exception("Could not find employee with id- " + id);
+
+        /* IMPORTANT - To prevent the overriding of the existing value of the variables in the database,
+         * if that variable is not coming in the @RequestBody annotation object. */
+        /*if(updCategory.getName() == null || updCategory.getName().isEmpty())
+            updCategory.setName(category.getName());
+
+        // Required for the "where" clause in the sql query template.
+        //updCategory.setId(id);
+        return categoryService.updateCategory(updCategory);
+    }*/
+
+    @PostMapping(value = "/category/update/{id}")
+    public String updateCategory(@PathVariable("id") int id,@Valid Category category,
+                                 BindingResult result, Model model) {
+        Category currentCategory = categoryService.findById(id);
+        currentCategory.setName(category.getName());
+        categoryService.updateCategory(currentCategory);
+        if (result.hasErrors()){
+            return "/category/update";
+        }
+        categoryService.updateCategory(currentCategory);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+
+        allCategories(model);
+        model.addAttribute("role",role);
+        return "redirect:/category/index";
+
+    }
+
 
     @RequestMapping("category/{id}/delete")
     public String deleteById(@PathVariable String id){

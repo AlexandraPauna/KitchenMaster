@@ -27,4 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe saveRecipe(Recipe recipe) {
         return recipeRepository.saveAndFlush(recipe);
     }
+
+    @Override
+    public void deleteById(int id) {
+        recipeRepository.deleteById(id);
+    }
 }

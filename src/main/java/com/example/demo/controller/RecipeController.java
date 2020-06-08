@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -38,7 +39,6 @@ public class RecipeController {
     @RequestMapping(value = "/recipe/index", method = RequestMethod.GET)
     public String allRecipes(Model model) {
         model.addAttribute("recipes", recipeService.getAllRecipes());
-
         return "/recipe/index";
     }
 
@@ -109,5 +109,12 @@ public class RecipeController {
                 return null;
             }
         });
+    }
+
+
+    @RequestMapping("recipe/{id}/delete")
+    public String deleteById(@PathVariable String id){
+        recipeService.deleteById(Integer.valueOf(id));
+        return "redirect:/recipe/index";
     }
 }

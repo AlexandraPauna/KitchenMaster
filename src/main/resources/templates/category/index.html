@@ -23,8 +23,11 @@
                 <div class="col-md-6">
                     <p th:text="${category.name}"> Name</p>
                 </div>
-                <div>
-                    <a href="#" th:href="@{'/category/' + ${category.category_id} + '/delete'}">Delete</a>
+                <div  th:if="${role == 'ADMIN'}">
+                    <a href="#" th:href="@{'/category/' + ${category.category_id} + '/delete'}">Delete category</a>
+                </div>
+                <div  th:if="${role == 'ADMIN'}">
+                    <a href="#" th:href="@{'/category/update/'  + ${category.category_id} }">Edit category</a>
                 </div>
             </div>
 
