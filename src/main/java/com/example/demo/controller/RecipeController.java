@@ -15,10 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -39,6 +36,7 @@ public class RecipeController {
     @RequestMapping(value = "/recipe/index", method = RequestMethod.GET)
     public String allRecipes(Model model) {
         model.addAttribute("recipes", recipeService.getAllRecipes());
+
         return "/recipe/index";
     }
 
@@ -79,7 +77,7 @@ public class RecipeController {
 
             return "/recipe/add";
         }
-        recipe.setScore(0);
+        recipe.setScore((double) 0);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         recipe.setUser(user);
@@ -111,10 +109,44 @@ public class RecipeController {
         });
     }
 
+    @RequestMapping(value = "/recipe/personal", method = RequestMethod.GET)
+    public String allRecipesForLoggedUser(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
 
-    @RequestMapping("recipe/{id}/delete")
-    public String deleteById(@PathVariable String id){
-        recipeService.deleteById(Integer.valueOf(id));
-        return "redirect:/recipe/index";
+            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
+            model.addAttribute("recipes", recipes);
+            model.addAttribute("nrOfRecipes", recipes.size());
+            return "/recipe/personal";
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+            return "/home/index";
+        }
     }
+
+    @GetMapping("/recipe/show/{id}")
+    public String showRecipe(@PathVariable String id, Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
+
+        model.addAttribute("recipe", recipeService.findRecipeById(Integer.valueOf(id)));
+
+        return "recipe/show";
+    }
+    
 }

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:javascript="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" th:href="@{/ico/apple-touch-icon-144-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" th:href="@{/ico/apple-touch-icon-114-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" th:href="@{/ico/apple-touch-icon-72-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" th:href="@{/ico/apple-touch-icon-57-precomposed.png}">
+    <link rel="shortcut icon" th:href="@{/ico/favicon.png}">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <title>BOOTCLASIFIED - Responsive Classified Theme</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
+
+
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <!-- styles needed for carousel slider -->
+    <link th:href="@{/plugins/owl-carousel/owl.carousel.css}" rel="stylesheet">
+    <link th:href="@{/plugins/owl-carousel/owl.theme.css}" rel="stylesheet">
+
+    <!-- bxSlider CSS file -->
+    <link th:href="@{/plugins/bxslider/jquery.bxslider.css}" rel="stylesheet"/>
+
+    <!-- Just for debugging purposes. -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- include pace script for automatic web page progress bar  -->
+    <script>
+        paceOptions = {
+            elements: true
+        };
+    </script>
+    <script th:src="@{/js/pace.min.js}"></script>
+    <script th:src="@{/plugins/modernizr/modernizr-custom.js}"></script>
+
+
+</head>
+<body>
+<div id="wrapper">
+    <div th:replace="layout :: header"></div>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <nav aria-label="breadcrumb" role="navigation" class="pull-left">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a ><i class="icon-home fa"></i></a></li>
+                            <li th:each="category : ${recipe.categories}" class="breadcrumb-item" aria-current="page">
+                                <a th:href="@{'/category/show/' + ${category.category_id}}" th:text="${category.name}"></a>
+                            </li>
+                        </ol>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 page-content col-thin-right">
+                    <div class="inner inner-box ads-details-wrapper">
+                        <h2 th:text="${recipe.name}"></h2>
+                        <span class="info-row">
+                    <span class="date" th:text="${#dates.format(recipe.date, 'dd-MM-yyyy HH:MM')}">
+                        <i class=" icon-clock"> </i></span> /
+                    <span class="category" th:each="category : ${recipe.categories}"
+                          th:text="${category.name}"></span> /
+<!--                    <span class="category pull-right"> <i class="icon-eye"></i> Vizualizari: @((Model.Views+1)/2) </span>-->
+                </span>
+
+<!--                        Imagini-->
+<!--                        <div class="ads-image ads-img-v2">-->
+<!--                            <div class="img-slider-box">-->
+<!--                                <div class="slider-left">-->
+<!--                                    <ul class="bxslider">-->
+<!--                                        @foreach (var item in ViewBag.ProductImages)-->
+<!--                                        {-->
+<!--                                        <li><img src="@item" alt="Imagine produs" /></li>-->
+<!--                                        }-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+
+<!--                                <div id="bx-pager" class="scrollbar">-->
+<!--                                    @{-->
+<!--                                    var indexNr = 0;-->
+<!--                                    }-->
+<!--                                    @foreach (var item in ViewBag.ProductImages)-->
+<!--                                    {-->
+<!--                                    if (indexNr < 3)-->
+<!--                                    {-->
+<!--                                    <a class="thumb-item-link" data-slide-index="@indexNr" href="">-->
+<!--                                        <img src="@item" alt="Imagine Produs" />-->
+<!--                                    </a>-->
+<!--                                    indexNr = indexNr + 1;-->
+<!--                                    }-->
+<!--                                    else-->
+<!--                                    {-->
+<!--                                    indexNr = 0;-->
+<!--                                    }-->
+<!--                                    }-->
+
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash;ads-image&ndash;&gt;-->
+
+<!--                        </div>-->
+
+
+                        <div class="Ads-Details">
+                            <h5 class="list-title"><strong>Recipe Information</strong></h5>
+
+                            <div class="row">
+                                <div class="ads-details-info col-md-8">
+                                    <h4>Ingredients needed</h4>
+                                    <p th:text="${recipe.description}"></p>
+
+                                    <h4>Steps and Preparation</h4>
+                                    <p th:text="${recipe.info != null ? recipe.info.info:''}"></p>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <aside class="panel panel-body panel-details">
+                                        <ul>
+                                            <li>
+                                                <p class=" no-margin " th:text="'CALORIES: ' + ${recipe.calories} + ' KCAL'">
+                                                    </p>
+                                            </li>
+                                            <li>
+                                                <p class=" no-margin " th:text="'SERVINGS: ' + ${recipe.serving} + ' portions'">
+                                                    </p>
+                                            </li>
+                                            <li>
+                                                <p class=" no-margin " th:text="'PREPARATION TIME: ' + ${recipe.preparation_time} + ' min'">
+                                                    </p>
+                                            </li>
+
+                                        </ul>
+                                    </aside>
+
+                                    <div class="ads-action">
+                                        <ul th:if="${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName}" class="list-border">
+
+                                            <li>
+                                                <a th:href="@{'/recipe/edit/' + ${recipe.id}}">
+                                                    <i class=" fa fa-pen"></i> Edit Recipe
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a th:href="@{'/recipe/' + ${recipe.id} + '/delete'}" style="color:#ff0000">
+                                                    <i class=" fa fa-power-off" style="color:#ff0000"></i> Delete Recipe
+                                                </a>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!--/.ads-details-wrapper-->
+
+                </div>
+                <!--/.page-content-->
+
+                <div class="col-md-3  page-sidebar-right">
+                    <aside>
+
+                        <div class="card card-user-info sidebar-card">
+                            <div class="block-cell user">
+
+                                <div class="cell-content">
+                                    <h5 class="title">Posted By:</h5>
+                                    <span class="name" th:text="${recipe.user.userName}"></span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body text-left">
+
+                                    <div class="grid-col">
+                                        <div class="col from">
+                                            <i class="fas fa-user"></i>
+                                            <span>Added on</span>
+                                        </div>
+                                        <div class="col to">
+                                            <span th:text="${#dates.format(recipe.date, 'dd-MM-yyyy HH:MM')}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-col">
+                                        <div class="col from">
+                                            <i class="fas fa-star"></i>
+                                            <span>Recipe Rating</span>
+                                        </div>
+                                        <div class="col to">
+                                            <span th:if="${recipe.score} != '0'" th:text="${recipe.score}"></span>
+                                            <span th:if="${recipe.score} == '0'">No rating added</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="ev-action">
+                                    <a class="btn btn-success btn-block"
+                                       th:href="@{'/recipe/' + ${recipe.id} + '/rating/index'}">
+                                        <i class=" icon-star"></i> View recipe ratings
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card sidebar-card">
+                            <div class="card-header">
+                                How to follow a Recipe Successfully?
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body text-left">
+                                    <ul class="list-check">
+                                        <li> Read the recipe – TWICE</li>
+                                        <li> Check the ingredients list. Have you go everything you need?</li>
+                                        <li> Make sure you have time to complete the recipe</li>
+                                        <li> Don't substitute ingredients</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.categories-list-->
+                    </aside>
+                </div>
+                <!--/.page-side-bar-->
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.main-container -->
+
+</div>
+<!-- /.wrapper -->
+
+
+<!-- Le javascript
+================================================== -->
+
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/jquery/jquery-3.3.1.min.js">\x3C/script>')</script>
+
+<script th:src="@{/js/vendors.min.js}"></script>
+
+<!-- include custom script for site  -->
+<script th:src="@{/js/main.min.js}"></script>
+
+
+<!-- include jquery file upload plugin  -->
+<script th:src="@{/js/fileinput.min.js}" type="text/javascript"></script>
+<script>
+    // initialize with defaults
+    $("#input-upload-img1").fileinput();
+    $("#input-upload-img2").fileinput();
+    $("#input-upload-img3").fileinput();
+    $("#input-upload-img4").fileinput();
+    $("#input-upload-img5").fileinput();
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Recipe;
+import com.example.demo.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,5 +9,6 @@ import java.util.List;
 public interface RecipeService {
     List<Recipe> getAllRecipes();
     Recipe saveRecipe(Recipe recipe);
-    void deleteById(int id);
+    List<Recipe> getAllRecipesForLoggedUser(User user);
+    Recipe findRecipeById(Integer id);
 }
