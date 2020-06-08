@@ -142,47 +142,4 @@ public class RatingController {
         }
     }
 
-//    @RequestMapping(value={"/rating/personal", "/rating/personal/{sortType}"}, method = RequestMethod.GET)
-//    public String allRatingsForLoggedUser(@PathVariable Map<String, String> pathVarsMap, Model model){
-//        String sortType = pathVarsMap.get("sortType");
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user = userService.findUserByUserName(auth.getName());
-//        if(user != null){
-//            model.addAttribute("loggedUser", user);
-//            model.addAttribute("isAuth", "true");
-//            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
-//            model.addAttribute("role", role);
-//
-//            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
-//            model.addAttribute("nrOfRecipes", recipes.size());
-//
-//            List<Rating> ratingsGiven = ratingService.getAllRatingsForLoggedUser(user);
-//            List<Rating> ratingsReceived = new ArrayList<Rating>();
-//            for (Recipe recipe : recipes
-//            ) {
-//                List <Rating> ratingsReceivedForRecipe = ratingService.getAllRatingsForRecipe(recipe);
-//                if(ratingsReceivedForRecipe != null && ratingsReceivedForRecipe.size()>0){
-//                    ratingsReceived.addAll(ratingsReceivedForRecipe);
-//                }
-//            }
-//
-//            if (sortType == null || sortType == "Given")
-//            {
-//                model.addAttribute("ratings", ratingsGiven);
-//                model.addAttribute("nrOfRatings", ratingsGiven.size());
-//            }
-//            if (sortType == "Received")
-//            {
-//                model.addAttribute("ratings", ratingsReceived);
-//                model.addAttribute("nrOfRatings", ratingsReceived.size());
-//            }
-//
-//            return "rating/personal";
-//        }
-//        else{
-//            model.addAttribute("isAuth", "false");
-//            return "redirect:/login";
-//        }
-//    }
 }
