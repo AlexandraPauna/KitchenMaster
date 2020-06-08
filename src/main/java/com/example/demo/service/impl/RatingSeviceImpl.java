@@ -29,4 +29,14 @@ public class RatingSeviceImpl implements RatingService {
     public boolean existsByUserAndRecipe(User user, Recipe recipe) {
         return ratingRepository.existsByUserAndRecipe(user, recipe);
     }
+
+    @Override
+    public List<Rating> getAllRatingsForLoggedUser(User user) {
+        return ratingRepository.findByUser(user);
+    }
+
+    @Override
+    public List<Rating> getAllRatingsForRecipe(Recipe recipe) {
+        return ratingRepository.findByRecipe(recipe);
+    }
 }

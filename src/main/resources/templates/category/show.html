@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:javascript="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" th:href="@{/ico/apple-touch-icon-144-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" th:href="@{/ico/apple-touch-icon-114-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" th:href="@{/ico/apple-touch-icon-72-precomposed.png}">
+    <link rel="apple-touch-icon-precomposed" th:href="@{/ico/apple-touch-icon-57-precomposed.png}">
+    <link rel="shortcut icon" th:href="@{/ico/favicon.png}">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <title>Kitchen Master</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
+
+
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <!-- styles needed for carousel slider -->
+    <link th:href="@{/plugins/owl-carousel/owl.carousel.css}" rel="stylesheet">
+    <link th:href="@{/plugins/owl-carousel/owl.theme.css}" rel="stylesheet">
+
+    <!-- bxSlider CSS file -->
+    <link th:href="@{/plugins/bxslider/jquery.bxslider.css}" rel="stylesheet"/>
+
+    <!-- Just for debugging purposes. -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- include pace script for automatic web page progress bar  -->
+    <script>
+        paceOptions = {
+            elements: true
+        };
+    </script>
+    <script th:src="@{/js/pace.min.js}"></script>
+    <script th:src="@{/plugins/modernizr/modernizr-custom.js}"></script>
+
+
+</head>
+<body>
+<div id="wrapper">
+    <div th:replace="layout :: header"></div>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <!-- this (.mobile-filter-sidebar) part will be position fixed in mobile version -->
+                <div class="col-md-3 page-sidebar mobile-filter-sidebar">
+                    <aside>
+                        <div class="sidebar-modern-inner">
+                            <div class="block-title has-arrow sidebar-header">
+                                <h5>
+                                    <a th:href="@{'category/index/'}" text="View categories">
+                                    <i class="fa fa-angle-left"></i>
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div class="block-content categories-list  list-filter ">
+                                <ul class=" list-unstyled">
+                                    <li>
+                                        <a th:href="@{'/category/show/' + ${category.category_id}}">
+                                        <span class="title">
+                                            <strong th:text="${category.name}"></strong></span>
+                                            <span class="count" th:text="${nrOfRecipes}"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul th:each="cat : ${allCategories}" class=" list-unstyled">
+                                    <li>
+                                        <a th:href="@{'/category/show/' + ${cat.category_id}}">
+                                        <span th:text="${cat.name}" class="title"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>  <!--/.categories-list-->
+
+                            <div style="clear:both"></div>
+                        </div>
+
+                        <!--/.categories-list-->
+                    </aside>
+                </div>
+                <!--/.page-side-bar-->
+                <div class="col-md-9 page-content col-thin-left">
+                    <div class="category-list">
+                        <div class="tab-box ">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs add-tabs tablist" role="tablist">
+                                <li class="active nav-item">
+                                    <a href="#alladslist" role="tab" data-toggle="tab" class="nav-link">Recipes
+                                        <span class="badge badge-pill badge-secondary" th:text="${nrOfRecipes}"></span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-filter">
+                                <select title="sort by" class="selectpicker select-sort-by" data-style="btn-select"
+                                        data-width="auto">
+                                    <option>Sort by</option>
+                                    <option>Rating: High to Low</option>
+                                    <option>Title: Ascending</option>
+                                    <option>Title: Descending</option>
+                                </select>
+<!--                                @using (Html.BeginForm("Show", "SubCategories", new { id = Model.SubCategoryId }, FormMethod.Get, new { id = "form1" }))-->
+<!--                                {-->
+
+<!--                                -->
+<!--                                @Html.DropDownList("sortType", new SelectList(-->
+<!--                                new List<Object>{-->
+<!--                                new { value = "Select" , text = "Selecteaza"  },-->
+<!--                                new { value = "Title" , text = "Titlu" },-->
+<!--                                new { value = "Date" , text = "Cele mai recente"},-->
+<!--                                new { value = "PriceAsc" , text = "Pret crescator"},-->
+<!--                                new { value = "PriceDesc" , text = "Pret descrescator"}-->
+<!--                                }, "value", "text", 2), new { id = "sortType", @class = "selectpicker select-sort-by", @onchange = "submitform();" });-->
+
+<!--                                }-->
+
+                            </div>
+
+                        </div>
+                        <!--/.tab-box-->
+                        <!--/.tab-box-->
+
+                        <div class="listing-filter">
+                            <div th:if="${role == 'ADMIN'}" class="pull-left col-xs-6">
+                                <div class="breadcrumb-list">
+                                    <a class="btn btn-sm btn-info" style="margin-right:5px;"
+                                       th:href="@{'/category/edit/' + ${category.category_id}}">Edit</a>
+                                </div>
+
+                            </div>
+                            <div th:if="${role == 'ADMIN'}" class="pull-left col-xs-6">
+                                <div class="breadcrumb-list">
+                                    <a class="btn btn-sm btn-danger" style="margin-right:5px;"
+                                       th:href="@{'/category/' + ${category.category_id} + '/delete'}">Delete</a>
+                                </div>
+
+                            </div>
+
+                            <div class="pull-right col-xs-6 text-right listing-view-action">
+                                <span class="list-view active"><i class="  icon-th"></i></span>
+                                <span class="compact-view"><i class=" icon-th-list  "></i></span>
+                                <span class="grid-view "><i class=" icon-th-large "></i></span>
+                            </div>
+                            <div style="clear:both"></div>
+                        </div>
+                        <!--/.listing-filter-->
+                        <!-- Mobile Filter bar-->
+                        <div class="mobile-filter-bar col-xl-12  ">
+                            <ul class="list-unstyled list-inline no-margin no-padding">
+                                <li class="filter-toggle">
+                                    <a class="">
+                                        <i class="  icon-th-list"></i>
+                                        FILTERS
+                                    </a>
+                                </li>
+                                <li>
+
+
+                                    <div class="dropdown">
+                                        <a data-toggle="dropdown" class="dropdown-toggle">
+                                            Sort by
+                                        </a>
+                                        <ul class="dropdown-menu">
+<!--                                            <li><a href="" rel="nofollow">Relevance</a></li>-->
+<!--                                            <li><a href="" rel="nofollow">Date</a></li>-->
+<!--                                            <li><a href="" rel="nofollow">Company</a></li>-->
+<!--                                            <select title="sort by" class="selectpicker select-sort-by" data-style="btn-select"-->
+<!--                                                    data-width="auto">-->
+<!--                                                <option>Sort by</option>-->
+<!--                                                <option>Rating: High to Low</option>-->
+<!--                                                <option>Title: Ascending</option>-->
+<!--                                                <option>Title: Descending</option>-->
+<!--                                                -->
+<!--                                            </select>-->
+                                        </ul>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="menu-overly-mask"></div>
+                        <!-- Mobile Filter bar End-->
+
+
+
+                        <div class="tab-content">
+                            <div class="tab-pane  active " id="alladslist">
+                                <div class="adds-wrapper row no-margin">
+
+                                    <div th:each="recipe : ${recipes}" class="item-list">
+                                        <div class="row">
+                                            <div class="col-md-2 no-padding photobox">
+<!--                                                Imagine reteta-->
+<!--                                                <div class="add-image">-->
+<!--                                                    <span class="photo-count"><i class="fa fa-camera"></i></span>-->
+<!--                                                    <a th:href="@{'/recipe/show/' + ${recipe.id}}">-->
+<!--                                                    <img class="thumbnail no-margin" -->
+<!--                                                         src="@Url.Action("MainProductPhoto", "Product", new { prodId = product.ProductId})" alt="img">-->
+<!--                                                    </a>-->
+<!--                                                </div>-->
+                                            </div>
+                                            <!--/.photobox-->
+                                            <div class="col-md-7 add-desc-box">
+                                                <div class="ads-details">
+                                                    <h5 class="add-title">
+                                                        <a th:href="@{'/recipe/show/' + ${recipe.id}}"
+                                                           th:text="${recipe.name}"></a>
+                                                    </h5>
+                                                    <span class="info-row">
+                                                        <span class="date"
+                                                              th:text="${#dates.format(recipe.date, 'dd-MM-yyyy HH:MM')}">
+                                                            <i class=" icon-clock"> </i></span> -
+                                                        <span th:each="cat : ${recipe.categories}"
+                                                              th:text="${cat.name} + ' - '" class="category"></span>
+                                                        <span class="item-location" th:text="${recipe.preparation_time} + ' minutes'">
+                                                            <i class=" icon-food"></i></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!--/.add-desc-box-->
+                                            <div class="col-md-3 text-right  price-box">
+                                                <h2 class="item-price" th:text="${recipe.calories} + ' KCAL'"></h2>
+                                                <a class="btn btn-danger  btn-sm make-favorite"
+                                                   th:if="${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName}"
+                                                   th:href="@{'/recipe/edit/' + ${recipe.id}}" style="margin-bottom:3px;">
+
+                                                    <i class="fa fa-certificate"></i>
+
+                                                    <span>Edit</span>
+                                                </a>
+
+                                            </div>
+                                            <!--/.add-desc-box-->
+                                        </div>
+
+                                    </div>
+                                    <!--/.item-list-->
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!--/.adds-wrapper-->
+
+                        <div class="tab-box  save-search-bar text-center">
+                        </div>
+                    </div>
+                    <div class="pagination-bar text-center">
+<!--                        TO DO: Paginare-->
+<!--                        <nav aria-label="Page navigation " class="d-inline-b">-->
+<!--                            Pagina @(Model.Products.PageCount < Model.Products.PageNumber ? 0 : Model.Products.PageNumber) din @Model.Products.PageCount-->
+
+<!--                            @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Show", new { id = Model.SubCategoryId, dateMin = ViewBag.DateMin,-->
+<!--                            fromCity = ViewBag.FromCity, priceMin = ViewBag.PriceMin, priceMax = ViewBag.PriceMax, state = ViewBag.State,-->
+<!--                            sortType = ViewBag.SortType, page = page}),-->
+<!--                            new PagedListRenderOptions-->
+<!--                            {-->
+<!--                            FunctionToTransformEachPageLink = (liTag, aTag) => { aTag.Attributes.Add("class", "page-link".ToString());-->
+<!--                            return aTag; },-->
+<!--                            LiElementClasses = new string[] { "page-item" },-->
+<!--                            })-->
+<!--                        </nav>-->
+                    </div>
+                    <!--/.pagination-bar -->
+
+                    <div class="post-promo text-center">
+                        <h2> Post your favorite Recipe! </h2>
+                        <h5>Post your delicious recipe with us. Make sure you make your chef skills
+                            are acknowledged by everyone!</h5>
+                        <a th:href="@{/recipe/add}" class="btn btn-lg btn-border btn-post btn-danger">Add Recipe </a>
+                    </div>
+                    <!--/.post-promo-->
+
+                </div>
+                <!--/.page-content-->
+
+            </div>
+        </div>
+
+    </div>
+    <!-- /.main-container -->
+
+</div>
+<!-- /.wrapper -->
+
+
+<!-- Le javascript
+================================================== -->
+
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/jquery/jquery-3.3.1.min.js">\x3C/script>')</script>
+
+<script th:src="@{/js/vendors.min.js}"></script>
+
+<!-- include custom script for site  -->
+<script th:src="@{/js/main.min.js}"></script>
+
+
+<!-- include jquery file upload plugin  -->
+<script th:src="@{/js/fileinput.min.js}" type="text/javascript"></script>
+<script>
+    // initialize with defaults
+    $("#input-upload-img1").fileinput();
+    $("#input-upload-img2").fileinput();
+    $("#input-upload-img3").fileinput();
+    $("#input-upload-img4").fileinput();
+    $("#input-upload-img5").fileinput();
+</script>
+</body>
+</html>

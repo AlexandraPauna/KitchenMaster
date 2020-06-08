@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface RatingRepository extends JpaRepository<Rating, Integer> {
     boolean existsByUserAndRecipe(User user, Recipe recipe);
+    List<Rating> findByUser(User user);
+    List<Rating> findByRecipe(Recipe recipe);
 }

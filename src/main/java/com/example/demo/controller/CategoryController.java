@@ -26,6 +26,9 @@ public class CategoryController {
     CategoryService categoryService;
 
     @Autowired
+    RecipeService recipeService;
+
+    @Autowired
     UserService userService;
 
     @RequestMapping(value = "/category/index", method = RequestMethod.GET)
@@ -58,6 +61,32 @@ public class CategoryController {
     public String deleteById(@PathVariable String id){
         categoryService.deleteById(Integer.valueOf(id));
         return "redirect:/category/index";
+    }
+
+    @GetMapping("/category/show/{id}")
+    public String showCategory(@PathVariable String id, Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
+
+        model.addAttribute("category", categoryService.findCategoryById(Integer.valueOf(id)));
+        model.addAttribute("recipes", categoryService.findCategoryById(Integer.valueOf(id)).getRecipes());
+        model.addAttribute("nrOfRecipes",
+                categoryService.findCategoryById(Integer.valueOf(id)).getRecipes().size());
+
+        //TO DO: sa se elimine categoria curenta din lista
+        List<Category> allCategories = categoryService.getAllCategories();
+        model.addAttribute("allCategories", allCategories);
+
+        return "category/show";
     }
 
 }
