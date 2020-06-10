@@ -7,33 +7,29 @@ import com.example.demo.service.CategoryService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-public class CategoryController {
-    @Autowired
-    CategoryService categoryService;
-
+public class HomeController {
     @Autowired
     RecipeService recipeService;
 
     @Autowired
+    CategoryService categoryService;
+
+    @Autowired
     UserService userService;
 
-    @RequestMapping(value= "/category/index", method = RequestMethod.GET)
-    public String allCategories(Model model) {
+    @RequestMapping(value={"/", "/home/index"}, method = RequestMethod.GET)
+    public String allRecipes(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         if(user != null){
@@ -98,66 +94,22 @@ public class CategoryController {
         model.addAttribute("categoriesList3", list3);
         model.addAttribute("categoriesList4", list4);
 
-        return "/category/index";
-    }
+        //sortare descendenta dupa data adaugarii
+        List<Recipe> recipes = recipeService.getAllRecipes();
+        Collections.sort(recipes, new Comparator<Recipe>() {
+            @Override
+            public int compare(Recipe r1, Recipe r2) {
+                return r2.getDate().compareTo(r1.getDate());
+            }
+        });
+        //ultimele 10 retete adaugate vor fi afisate
+        model.addAttribute("latestRecipes", recipes.stream().limit(10).collect(Collectors.toList()));
 
-//    @RequestMapping(value = "/category/index", method = RequestMethod.GET)
-//    public String allCategorie(Model model) {
-//        model.addAttribute("categories", categoryService.getAllCategories());
-//        return "/category/index";
-//    }
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        model.addAttribute("currentDate", currentDate);
 
-    @RequestMapping(value = "/category/new", method = RequestMethod.GET)
-    public String newCategory(Model model) {
-        Category category = new Category();
-        model.addAttribute("category", category);
-        return "/category/new";
-    }
-
-    @RequestMapping(value = "/category/new", method = RequestMethod.POST)
-    public String savedCategory(@Valid Category category, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-
-        Category savedCategory = categoryService.saveCategory(category);
-        allCategories(model);
-        return "/category/index";
-    }
-
-    @RequestMapping("category/{id}/delete")
-    public String deleteById(@PathVariable String id){
-        categoryService.deleteById(Integer.valueOf(id));
-        return "redirect:/category/index";
-    }
-
-    @GetMapping("/category/show/{id}")
-    public String showCategory(@PathVariable String id, Model model){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUserName(auth.getName());
-        model.addAttribute("loggedUser", user);
-        if(user != null){
-            model.addAttribute("isAuth", "true");
-            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
-            model.addAttribute("role", role);
-        }
-        else{
-            model.addAttribute("isAuth", "false");
-            model.addAttribute("role", null);
-        }
-
-        model.addAttribute("category", categoryService.findCategoryById(Integer.valueOf(id)));
-        model.addAttribute("recipes", categoryService.findCategoryById(Integer.valueOf(id)).getRecipes());
-        model.addAttribute("nrOfRecipes",
-                categoryService.findCategoryById(Integer.valueOf(id)).getRecipes().size());
-
-        //TO DO: sa se elimine categoria curenta din lista
-        List<Category> allCategories = categoryService.getAllCategories();
-        model.addAttribute("allCategories", allCategories);
-
-        return "category/show";
+        return "/home/index";
     }
 
 }

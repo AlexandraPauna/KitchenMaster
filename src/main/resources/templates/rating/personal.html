@@ -185,7 +185,8 @@
 
                                                     <div class="list-box-action">
                                                         <a th:if="${rating.user.id} == ${loggedUser}" class="markAsRead"
-                                                           data-toggle="tooltip" data-placement="top" title="Edit">
+                                                           data-toggle="tooltip" data-placement="top"
+                                                           th:href="@{'/rating/edit' + ${rating.id}}" title="Edit">
                                                             <i class=" fas fa-pencil"></i>Edit</a>
                                                     </div>
                                                 </div>

@@ -11,4 +11,5 @@ public interface RatingService {
     boolean existsByUserAndRecipe(User user, Recipe recipe);
     List<Rating> getAllRatingsForLoggedUser(User user);
     List<Rating> getAllRatingsForRecipe(Recipe recipe);
+    Rating findRatingById(Integer id);
 }

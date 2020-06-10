@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
     <!-- Fav and touch icons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" th:href="@{/ico/apple-touch-icon-144-precomposed.png}">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" th:href="@{/ico/apple-touch-icon-114-precomposed.png}">
@@ -12,7 +13,7 @@
     <link rel="shortcut icon" th:href="@{/ico/favicon.png}">
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
-    <title>BOOTCLASIFIED - Responsive Classified Theme</title>
+    <title>Kitchen Master</title>
     <!-- Bootstrap core CSS -->
     <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
 
@@ -48,20 +49,36 @@
 <div id="wrapper">
     <div th:replace="layout :: header"></div>
 
+    <div class="intro" style="background-image: url(../../images/bg2.jpg);">
+        <div class="container text-center">
+
+            <h1 class="intro-title animated fadeInDown">
+
+                FIND THE RECIPE THAT YOU WERE LOOKING FOR
+            </h1>
+
+            <p class="sub animateme fittext3 animated fadeIn">
+                Find delicious recipes on KitchenMaster quick and easy
+            </p>
+
+        </div>
+    </div>
+
     <div class="main-container">
         <div class="container">
+            <!--Categories-->
             <div class="col-xl-12 content-box ">
                 <div class="row row-featured">
                     <div style="clear: both"></div>
                     <div class="tab-lite relative w100">
-                        <!-- Nav tabs -->
                         <ul class="nav nav-tabs " role="tablist">
                             <li role="presentation" class="active nav-item">
                                 <a class="nav-link">
+<!--                                        href="#tab1" aria-controls="tab1"-->
+<!--                                   role="tab" data-toggle="tab"-->
                                     <i class="icon-location-2"></i> Find By Category
                                 </a>
-                                <a th:if="${isAuth == 'true'} AND ${role == 'ADMIN'}"
-                                   style="top:0.4px" class="sell-your-item"
+                                <a th:if="${isAuth == 'true'} AND ${role == 'ADMIN'}" style="top:0.4px" class="sell-your-item"
                                    th:href="@{/category/new}">Add Category</a>
                             </li>
                         </ul>
@@ -80,7 +97,7 @@
                                         </ul>
 
                                         <ul th:if="${categoriesList2 != null}" th:each="category : ${categoriesList2}"
-                                            class="cat-list col-md-3  col-6 col-xxs-12">
+                                                class="cat-list col-md-3  col-6 col-xxs-12">
                                             <li>
                                                 <a th:href="@{'/category/show/' + ${category.category_id}}"
                                                    th:text="${category.name}"></a>
@@ -88,7 +105,7 @@
                                         </ul>
 
                                         <ul th:if="${categoriesList3 != null}" th:each="category : ${categoriesList3}"
-                                            class="cat-list col-md-3  col-6 col-xxs-12">
+                                                class="cat-list col-md-3  col-6 col-xxs-12">
                                             <li>
                                                 <a th:href="@{'/category/show/' + ${category.category_id}}"
                                                    th:text="${category.name}"></a>
@@ -96,7 +113,7 @@
                                         </ul>
 
                                         <ul th:if="${categoriesList4 != null}" th:each="category : ${categoriesList4}"
-                                            class="cat-list col-md-3  col-6 col-xxs-12">
+                                                class="cat-list col-md-3  col-6 col-xxs-12">
                                             <li>
                                                 <a th:href="@{'/category/show/' + ${category.category_id}}"
                                                    th:text="${category.name}"></a>
@@ -113,9 +130,76 @@
 
                 </div>
             </div>
+
+            <!--Latest Recipes added-->
+            <div class="col-xl-12 content-box ">
+                <div class="row row-featured">
+                    <div class="col-xl-12  box-title ">
+                        <div class="inner">
+                            <h2>
+                                Latest<span> Recipes </span>
+                            </h2>
+
+                        </div>
+                    </div>
+
+                    <div style="clear: both"></div>
+
+                    <div class=" relative  content featured-list-row  w100">
+
+                        <nav class="slider-nav has-white-bg nav-narrow-svg">
+                            <a class="prev">
+                                <span class="nav-icon-wrap"></span>
+
+                            </a>
+                            <a class="next">
+                                <span class="nav-icon-wrap"></span>
+                            </a>
+                        </nav>
+
+                        <div class="no-margin featured-list-slider ">
+                            <div th:each="recipe : ${latestRecipes}" class="item">
+                                <a th:href="@{'/recipe/show/' + ${recipe.id}}">
+                                <span class="item-carousel-thumb">
+                                    <img class="img-responsive" th:src="@{/images/chefHat.jpg}" alt="img">
+                                </span>
+                                <span class="item-name" th:text="${recipe.name}"></span>
+                                <span class="price" th:text="${recipe.calories} + ' KCAL'"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
+
     </div>
     <!-- /.main-container -->
+
+    <div class="page-bottom-info">
+        <div class="page-bottom-info-inner">
+            <div class="page-bottom-info-content text-center">
+
+
+                <h1>
+                    If you have any questions, comments or concerns, please call the KitchenMaster Advertising department at (000) 555-5556
+
+                </h1>
+                <a class="btn  btn-lg btn-primary-dark" href="tel:+000000000">
+                    <i class="icon-mobile"></i> <span class="hide-xs color50"></span> (000) 555-5556
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <hr />
+
+    <footer class="center-block">
+        <p th:text="${#dates.format(currentDate, 'dd-MM-yyyy HH:MM')} + ' - KitchenMaster'"></p>
+    </footer>
 
 </div>
 <!-- /.wrapper -->

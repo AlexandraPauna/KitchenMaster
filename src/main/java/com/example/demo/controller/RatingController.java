@@ -30,7 +30,7 @@ public class RatingController {
     @Autowired
     RatingService ratingService;
 
-    @RequestMapping(value = "recipe/{recipeId}/rating/index", method = RequestMethod.GET)
+    @RequestMapping(value = "rating/recipe/{recipeId}", method = RequestMethod.GET)
     public String showRecipeRatings(@PathVariable String recipeId, Model model){
         Recipe recipe = recipeService.findRecipeById(Integer.valueOf(recipeId));
         model.addAttribute("recipe", recipe);
@@ -57,11 +57,11 @@ public class RatingController {
         return "rating/show";
     }
 
-    @RequestMapping(value = "recipe/{recipeId}/rating/index", method = RequestMethod.POST)
+    @RequestMapping(value = "rating/recipe/{recipeId}", method = RequestMethod.POST)
     public String newRating(@Valid Rating newRating, BindingResult bindingResult,
                             @PathVariable String recipeId, Model model){
         if(bindingResult.hasErrors()){
-            return "redirect:/recipe/" + recipeId + "/rating/index";
+            return "redirect:/rating/recipe/" + recipeId;
         }
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -87,7 +87,7 @@ public class RatingController {
         recipe.setScore(newScore);
         recipeService.saveRecipe(recipe);
 
-        return "redirect:/recipe/" + recipeId + "/rating/index";
+        return "redirect:/rating/recipe/" + recipeId;
     }
 
     @RequestMapping(value="/rating/personal", method = RequestMethod.GET)
@@ -140,6 +140,24 @@ public class RatingController {
             model.addAttribute("isAuth", "false");
             return "redirect:/login";
         }
+    }
+
+    @RequestMapping(value = "/rating/edit/{ratingId}", method = RequestMethod.GET)
+    public String editRating(@PathVariable Integer ratingId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
+        model.addAttribute("newRating", ratingService.findRatingById(ratingId));
+
+        return "/rating/edit";
     }
 
 }

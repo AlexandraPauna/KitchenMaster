@@ -48,7 +48,7 @@
                                     <i class="icon-th-thumb"></i> My recipes </a>
                             </li>
                             <li th:if="${role == 'USER'}" class="dropdown-item" >
-                                <a th:href="@{/rating/index}">
+                                <a th:href="@{/rating/personal}">
                                     <i class="icon-star"></i> My ratings </a>
                             </li>
                             <li class="dropdown-item">
@@ -83,10 +83,10 @@
 
                 <ul th:if="${isAuth == 'false'}" class="nav navbar-nav ml-auto navbar-right">
                     <li class="nav-item">
-                        <a th:action="@{/registration}">Register</a>
+                        <a th:href="@{/registration}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a th:action="@{/login}">Login</a>
+                        <a th:href="@{/login}">Login</a>
                     </li>
                 </ul>
             </div>

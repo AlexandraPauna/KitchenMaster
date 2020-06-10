@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RatingSeviceImpl implements RatingService {
@@ -38,5 +39,16 @@ public class RatingSeviceImpl implements RatingService {
     @Override
     public List<Rating> getAllRatingsForRecipe(Recipe recipe) {
         return ratingRepository.findByRecipe(recipe);
+    }
+
+    @Override
+    public Rating findRatingById(Integer id) {
+        Optional<Rating> ratingOptional = ratingRepository.findById(id);
+
+        if (!ratingOptional.isPresent()) {
+            throw new RuntimeException("Rating not found!");
+        }
+
+        return ratingOptional.get();
     }
 }
