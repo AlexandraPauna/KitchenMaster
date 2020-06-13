@@ -148,5 +148,56 @@ public class RecipeController {
 
         return "recipe/show";
     }
-    
+
+    @RequestMapping("recipe/{id}/delete")
+    public String deleteById(@PathVariable String id){
+        recipeService.deleteById(Integer.valueOf(id));
+        return "redirect:/recipe/index";
+    }
+
+    @RequestMapping(value = "/recipe/update/{id}", method = RequestMethod.GET)
+    public String updateRecipe(Model model,@PathVariable int id) {
+        List<Category> categories = categoryService.getAllCategories();
+        categoryCache = new HashMap<String, Category>();
+        for (Category category : categories) {
+            categoryCache.put(category.getCategory_id().toString(), category);
+        }
+        model.addAttribute("categoriesList", categoryService.getAllCategories());
+
+        Recipe recipe = recipeService.findRecipeById(id);
+        model.addAttribute("recipe", recipe);
+        return "/recipe/update";
+    }
+
+    @PostMapping(value = "/recipe/update/{id}")
+    public String updateRecipe(@PathVariable("id") int id,@Valid Recipe recipe,
+                                 BindingResult result, Model model) {
+        Recipe currentRecipe = recipeService.findRecipeById(id);
+        currentRecipe.setName(recipe.getName());
+        currentRecipe.setScore(recipe.getScore());
+        //Calendar cal = Calendar.getInstance();
+        //Date dateUpdated = cal.getTime();
+        //currentRecipe.setDate(dateUpdated);
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User user = userService.findUserByUserName(auth.getName());
+        //String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+        //currentRecipe.setUser(user);
+        currentRecipe.setDescription(recipe.getDescription());
+        currentRecipe.setPreparation_time(recipe.getPreparation_time());
+        currentRecipe.setCalories(recipe.getCalories());
+        currentRecipe.setInfo(recipe.getInfo());
+        currentRecipe.setServing(recipe.getServing());
+        currentRecipe.setCategories(recipe.getCategories());
+
+        recipeService.updateRecipe(currentRecipe);
+        if (result.hasErrors()){
+            return "/recipe/update";
+        }
+
+
+        allRecipes(model);
+        //model.addAttribute("role",role);
+        return "redirect:/recipe/index";
+
+    }
 }

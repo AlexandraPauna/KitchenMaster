@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
 import com.example.demo.repository.RecipeRepository;
@@ -44,5 +45,16 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return recipeOptional.get();
+    }
+
+    @Override
+    public void deleteById(int id) {
+        recipeRepository.deleteById(id);
+    }
+
+    @Override
+    public Recipe updateRecipe(Recipe recipe) {
+
+        return recipeRepository.saveAndFlush(recipe);
     }
 }
