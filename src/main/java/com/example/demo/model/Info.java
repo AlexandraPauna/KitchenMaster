@@ -18,7 +18,8 @@ public class Info {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Lob
+    @Lob
+    @Column(length = 100000)
     @NotEmpty(message = "*Please provide a description!")
     private String info;
 

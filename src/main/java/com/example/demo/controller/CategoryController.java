@@ -8,6 +8,7 @@ import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -101,12 +102,6 @@ public class CategoryController {
         return "/category/index";
     }
 
-//    @RequestMapping(value = "/category/index", method = RequestMethod.GET)
-//    public String allCategorie(Model model) {
-//        model.addAttribute("categories", categoryService.getAllCategories());
-//        return "/category/index";
-//    }
-
     @RequestMapping(value = "/category/new", method = RequestMethod.GET)
     public String newCategory(Model model) {
         Category category = new Category();
@@ -134,7 +129,9 @@ public class CategoryController {
     }
 
     @GetMapping("/category/show/{id}")
-    public String showCategory(@PathVariable String id, Model model){
+    public String showCategory(@PathVariable String id, Model model,
+                               @RequestParam(defaultValue = "1", required = false) Integer pageNumber,
+                               @RequestParam(value="sortKey", defaultValue="date") String sortKey){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         model.addAttribute("loggedUser", user);
@@ -149,9 +146,21 @@ public class CategoryController {
         }
 
         model.addAttribute("category", categoryService.findCategoryById(Integer.valueOf(id)));
-        model.addAttribute("recipes", categoryService.findCategoryById(Integer.valueOf(id)).getRecipes());
-        model.addAttribute("nrOfRecipes",
-                categoryService.findCategoryById(Integer.valueOf(id)).getRecipes().size());
+        List<Recipe> recipes = new ArrayList<>(categoryService.findCategoryById(Integer.valueOf(id)).getRecipes());
+        model.addAttribute("nrOfRecipes",recipes.size());
+
+//        Paginare Var 1
+//        Integer size = 5;
+//        Pageable pageable = PageRequest.of(pageNumber-1, size, Sort.by("date").descending());
+//        int start = (int) pageable.getOffset();
+//        int end = (start + pageable.getPageSize()) > recipes.size() ? recipes.size() : (start + pageable.getPageSize());
+//        Page<Recipe> pages = new PageImpl<Recipe>(recipes.subList(start, end), pageable, recipes.size());
+//        model.addAttribute("recipes", pages);
+
+        Page<Recipe> pages = recipeService.getAllRecipesByCategoryPage(Integer.valueOf(id), pageNumber, sortKey);
+        model.addAttribute("recipes", pages);
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("sortKey", sortKey);
 
         //TO DO: sa se elimine categoria curenta din lista
         List<Category> allCategories = categoryService.getAllCategories();

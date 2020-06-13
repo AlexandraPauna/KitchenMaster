@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Category;
+import com.example.demo.model.Recipe;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,4 +12,5 @@ public interface CategoryService {
     Category saveCategory(Category category);
     void deleteById(int id);
     Category findCategoryById(Integer id);
+//    Page<Recipe> getAllRecipesPage(Integer id, Integer pageNumber);
 }

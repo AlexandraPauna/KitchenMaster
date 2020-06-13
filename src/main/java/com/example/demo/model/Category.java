@@ -19,7 +19,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
-    private Integer category_id;
+    private Integer categoryId;
 
     @Column(name = "name")
     @Length(min = 3, message = "*Category name must have at least 3 characters!")

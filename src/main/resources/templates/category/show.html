@@ -66,7 +66,7 @@
                             <div class="block-content categories-list  list-filter ">
                                 <ul class=" list-unstyled">
                                     <li>
-                                        <a th:href="@{'/category/show/' + ${category.category_id}}">
+                                        <a th:href="@{'/category/show/' + ${category.categoryId}}">
                                         <span class="title">
                                             <strong th:text="${category.name}"></strong></span>
                                             <span class="count" th:text="${nrOfRecipes}"></span>
@@ -75,7 +75,7 @@
                                 </ul>
                                 <ul th:each="cat : ${allCategories}" class=" list-unstyled">
                                     <li>
-                                        <a th:href="@{'/category/show/' + ${cat.category_id}}">
+                                        <a th:href="@{'/category/show/' + ${cat.categoryId}}">
                                         <span th:text="${cat.name}" class="title"></span>
                                         </a>
                                     </li>
@@ -102,28 +102,31 @@
                                 </li>
 
                             </ul>
+                            <!--Sortare-->
                             <div class="tab-filter">
-                                <select title="sort by" class="selectpicker select-sort-by" data-style="btn-select"
-                                        data-width="auto">
-                                    <option>Sort by</option>
-                                    <option>Rating: High to Low</option>
-                                    <option>Title: Ascending</option>
-                                    <option>Title: Descending</option>
-                                </select>
-<!--                                @using (Html.BeginForm("Show", "SubCategories", new { id = Model.SubCategoryId }, FormMethod.Get, new { id = "form1" }))-->
-<!--                                {-->
+                                <form method="get" id = "form2"
+                                      th:href="@{/category/show/__${category.categoryId}__/(pageNumber = ${currentPage})}">
+                                    <select title="sort by" class="selectpicker select-sort-by" data-style="btn-select"
+                                            data-width="auto" th:onchange = "submitform2();" name="sortKey">
+                                        <option>Sort by</option>
+                                        <option value="score">
+                                            Rating: High to Low
+                                        </option>
+                                        <option value="caloriesDesc">
+                                                Calories: High to Low
+                                        </option>
+                                        <option value="caloriesAsc">
+                                                Calories: Low to High
+                                        </option>
+                                        <option value="titleAsc">
+                                                Title: Ascending
+                                        </option>
+                                        <option value="titleDesc">
+                                                Title: Descending
+                                        </option>
+                                    </select>
 
-<!--                                -->
-<!--                                @Html.DropDownList("sortType", new SelectList(-->
-<!--                                new List<Object>{-->
-<!--                                new { value = "Select" , text = "Selecteaza"  },-->
-<!--                                new { value = "Title" , text = "Titlu" },-->
-<!--                                new { value = "Date" , text = "Cele mai recente"},-->
-<!--                                new { value = "PriceAsc" , text = "Pret crescator"},-->
-<!--                                new { value = "PriceDesc" , text = "Pret descrescator"}-->
-<!--                                }, "value", "text", 2), new { id = "sortType", @class = "selectpicker select-sort-by", @onchange = "submitform();" });-->
-
-<!--                                }-->
+                                </form>
 
                             </div>
 
@@ -135,14 +138,14 @@
                             <div th:if="${role == 'ADMIN'}" class="pull-left col-xs-6">
                                 <div class="breadcrumb-list">
                                     <a class="btn btn-sm btn-info" style="margin-right:5px;"
-                                       th:href="@{'/category/edit/' + ${category.category_id}}">Edit</a>
+                                       th:href="@{'/category/edit/' + ${category.categoryId}}">Edit</a>
                                 </div>
 
                             </div>
                             <div th:if="${role == 'ADMIN'}" class="pull-left col-xs-6">
                                 <div class="breadcrumb-list">
                                     <a class="btn btn-sm btn-danger" style="margin-right:5px;"
-                                       th:href="@{'/category/' + ${category.category_id} + '/delete'}">Delete</a>
+                                       th:href="@{'/category/' + ${category.categoryId} + '/delete'}">Delete</a>
                                 </div>
 
                             </div>
@@ -172,6 +175,29 @@
                                             Sort by
                                         </a>
                                         <ul class="dropdown-menu">
+                                            <form method="get" id = "form1"
+                                                  th:href="@{/category/show/__${category.categoryId}__/(pageNumber = ${currentPage})}">
+                                                <select title="sort by" class="selectpicker select-sort-by" data-style="btn-select"
+                                                        data-width="auto" th:onchange = "submitform();" id = "sortKey" name="sortKey">
+                                                    <option>Sort by</option>
+                                                    <option value="score">
+                                                        Rating: High to Low
+                                                    </option>
+                                                    <option value="caloriesDesc">
+                                                        Calories: High to Low
+                                                    </option>
+                                                    <option value="caloriesAsc">
+                                                        Calories: Low to High
+                                                    </option>
+                                                    <option value="titleAsc">
+                                                        Title: Ascending
+                                                    </option>
+                                                    <option value="titleDesc">
+                                                        Title: Descending
+                                                    </option>
+                                                </select>
+
+                                            </form>
 <!--                                            <li><a href="" rel="nofollow">Relevance</a></li>-->
 <!--                                            <li><a href="" rel="nofollow">Date</a></li>-->
 <!--                                            <li><a href="" rel="nofollow">Company</a></li>-->
@@ -198,7 +224,7 @@
                             <div class="tab-pane  active " id="alladslist">
                                 <div class="adds-wrapper row no-margin">
 
-                                    <div th:each="recipe : ${recipes}" class="item-list">
+                                    <div th:each="recipe : ${recipes.content}" class="item-list">
                                         <div class="row">
                                             <div class="col-md-2 no-padding photobox">
 <!--                                                Imagine reteta-->
@@ -257,22 +283,17 @@
                         <div class="tab-box  save-search-bar text-center">
                         </div>
                     </div>
-                    <div class="pagination-bar text-center">
-<!--                        TO DO: Paginare-->
-<!--                        <nav aria-label="Page navigation " class="d-inline-b">-->
-<!--                            Pagina @(Model.Products.PageCount < Model.Products.PageNumber ? 0 : Model.Products.PageNumber) din @Model.Products.PageCount-->
 
-<!--                            @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Show", new { id = Model.SubCategoryId, dateMin = ViewBag.DateMin,-->
-<!--                            fromCity = ViewBag.FromCity, priceMin = ViewBag.PriceMin, priceMax = ViewBag.PriceMax, state = ViewBag.State,-->
-<!--                            sortType = ViewBag.SortType, page = page}),-->
-<!--                            new PagedListRenderOptions-->
-<!--                            {-->
-<!--                            FunctionToTransformEachPageLink = (liTag, aTag) => { aTag.Attributes.Add("class", "page-link".ToString());-->
-<!--                            return aTag; },-->
-<!--                            LiElementClasses = new string[] { "page-item" },-->
-<!--                            })-->
-<!--                        </nav>-->
+                    <div class="pagination-bar text-center">
+                        <nav aria-label="Page navigation " class="d-inline-b">
+                            <ul class="pagination">
+                                <li th:each="iterStat : ${#numbers.sequence(1, recipes.totalPages, 1)}">
+                                    <a th:href="@{/category/show/__${category.categoryId}__/(pageNumber = ${(iterStat.intValue())}, sortKey = ${sortKey})}"
+                                       th:text="${iterStat.intValue()}" class="page-link"></a></li>
+                            </ul>
+                        </nav>
                     </div>
+
                     <!--/.pagination-bar -->
 
                     <div class="post-promo text-center">
@@ -319,6 +340,15 @@
     $("#input-upload-img3").fileinput();
     $("#input-upload-img4").fileinput();
     $("#input-upload-img5").fileinput();
+</script>
+<script type="text/javascript">
+    function submitform() {
+        $('#form1').submit();
+    }
+
+    function submitform2() {
+        $('#form2').submit();
+    }
 </script>
 </body>
 </html>

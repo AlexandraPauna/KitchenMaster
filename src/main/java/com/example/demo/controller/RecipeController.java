@@ -58,7 +58,7 @@ public class RecipeController {
         List<Category> categories = categoryService.getAllCategories();
         categoryCache = new HashMap<String, Category>();
         for (Category category : categories) {
-            categoryCache.put(category.getCategory_id().toString(), category);
+            categoryCache.put(category.getCategoryId().toString(), category);
         }
         model.addAttribute("categoriesList", categoryService.getAllCategories());
 
@@ -88,7 +88,7 @@ public class RecipeController {
 
         Recipe savedRecipe = recipeService.saveRecipe(recipe);
 
-        return "/recipe/index";
+        return "redirect:/recipe/personal";
     }
 
     @InitBinder
