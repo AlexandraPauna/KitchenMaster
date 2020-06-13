@@ -59,14 +59,14 @@
                                 <div class="collapse-box">
                                     <h5 class="collapse-title no-border">
                                         My Account <a href="#MyClassified" aria-expanded="true" data-toggle="collapse"
-                                                      class="pull-right active">
+                                                      class="pull-right">
                                     </a>
                                     </h5>
 
                                     <div class="panel-collapse collapse show" id="MyClassified">
                                         <ul class="acc-list">
                                             <li>
-                                                <a th:href="@{/manage/index}">
+                                                <a class="active" th:href="@{/profile}">
                                                     <i class="icon-home"></i>
                                                     My Profile
                                                 </a>
@@ -120,7 +120,7 @@
                             <div class="col-md-5 col-xs-4 col-xxs-12">
                                 <h3 class="no-padding text-center-480 useradmin">
                                     <a href="">
-                                        <img class="userImg" th:src="@{/images/noProfile.jpg}" th:text="${loggedUser.userName}">
+                                        <img class="userImg" th:src="@{/images/noProfile.png}" th:text="${loggedUser.userName}">
                                     </a>
                                 </h3>
                             </div>

@@ -1,11 +1,16 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Rating;
+import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
+import com.example.demo.service.RatingService;
+import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,12 +19,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    RecipeService recipeService;
+
+    @Autowired
+    RatingService ratingService;
 
     @GetMapping(value="/login")
     public ModelAndView login(){
@@ -75,6 +87,31 @@ public class LoginController {
         modelAndView.setViewName("admin/home");
 
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String showProfile(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+
+            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
+            model.addAttribute("recipes", recipes);
+            model.addAttribute("nrOfRecipes", recipes.size());
+
+            List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(user);
+            model.addAttribute("nrOfRatings", ratings.size());
+
+            return "/profile";
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+            return "redirect:/home/index";
+        }
     }
 
 }

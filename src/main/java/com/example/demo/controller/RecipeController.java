@@ -131,7 +131,7 @@ public class RecipeController {
         }
         else{
             model.addAttribute("isAuth", "false");
-            return "/home/index";
+            return "redirect:/home/index";
         }
     }
 
@@ -165,7 +165,7 @@ public class RecipeController {
         List<Category> categories = categoryService.getAllCategories();
         categoryCache = new HashMap<String, Category>();
         for (Category category : categories) {
-            categoryCache.put(category.getCategory_id().toString(), category);
+            categoryCache.put(category.getCategoryId().toString(), category);
         }
         model.addAttribute("categoriesList", categoryService.getAllCategories());
 
