@@ -154,7 +154,7 @@
                                         <ul th:if="${loggedUser != null} AND (${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName})" class="list-border">
 
                                             <li>
-                                                <a th:href="@{'/recipe/edit/' + ${recipe.id}}">
+                                                <a th:href="@{'/recipe/update/' + ${recipe.id}}">
                                                     <i class=" fa fa-pen"></i> Edit Recipe
                                                 </a>
                                             </li>

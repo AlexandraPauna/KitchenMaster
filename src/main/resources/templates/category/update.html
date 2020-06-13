@@ -53,12 +53,12 @@
             <div class="row">
                 <div class="col-md-9 page-content">
                     <div class="inner-box category-content">
-                        <h2 class="title-2 uppercase"><strong> <i class="icon-docs"></i> Add a category</strong></h2>
+                        <h2 class="title-2 uppercase"><strong> <i class="icon-docs"></i>Edit a category</strong></h2>
 
                         <div class="row">
                             <div class="col-sm-12">
 
-                                <form th:object="${category}" th:action="@{/category/new}" method="post"
+                                <form th:object="${category}" th:action="@{/category/update/{id}(id=${category.category_id})}" method="post"
                                       class="form-horizontal">
                                     <input type="hidden" th:field="*{category_id}"/>
 
@@ -72,10 +72,10 @@
                                         </div>
                                     </div>
 
-                                    <br>
-                                    <div class="form-group row">
+                                    <br/>
+                                    <div align="center" class="form-group row">
 
-                                        <div align="center" class="col-sm-12">
+                                        <div class="col-sm-12">
                                             <button type="submit" class="btn btn-success btn-lg">Submit</button>
                                             <!--                                            <a href="posting-success.html" id="button1id"-->
                                             <!--                                                                 class="btn btn-success btn-lg">Submit</a>-->

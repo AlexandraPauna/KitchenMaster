@@ -14,4 +14,6 @@ public interface RecipeService {
     List<Recipe> getAllRecipesForLoggedUser(User user);
     Recipe findRecipeById(Integer id);
     Page<Recipe> getAllRecipesByCategoryPage(Integer category_id, Integer pageNumber, String sortKey);
+    void deleteById(int id);
+    Recipe updateRecipe(Recipe recipe);
 }
