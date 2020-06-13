@@ -157,7 +157,7 @@ public class RecipeController {
     @RequestMapping("recipe/{id}/delete")
     public String deleteById(@PathVariable String id){
         recipeService.deleteById(Integer.valueOf(id));
-        return "redirect:/recipe/index";
+        return "redirect:/recipe/personal";
     }
 
     @RequestMapping(value = "/recipe/update/{id}", method = RequestMethod.GET)
