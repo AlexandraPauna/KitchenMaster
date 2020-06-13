@@ -151,7 +151,7 @@
                                     </aside>
 
                                     <div class="ads-action">
-                                        <ul th:if="${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName}" class="list-border">
+                                        <ul th:if="${loggedUser != null} AND (${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName})" class="list-border">
 
                                             <li>
                                                 <a th:href="@{'/recipe/update/' + ${recipe.id}}">
@@ -222,7 +222,7 @@
 
                                 <div class="ev-action">
                                     <a class="btn btn-success btn-block"
-                                       th:href="@{'/recipe/' + ${recipe.id} + '/rating/index'}">
+                                       th:href="@{'/rating/recipe/' + ${recipe.id}}">
                                         <i class=" icon-star"></i> View recipe ratings
                                     </a>
                                 </div>

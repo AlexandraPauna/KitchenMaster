@@ -12,15 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 @Controller
 public class RatingController {
@@ -34,7 +30,7 @@ public class RatingController {
     @Autowired
     RatingService ratingService;
 
-    @RequestMapping(value = "recipe/{recipeId}/rating/index", method = RequestMethod.GET)
+    @RequestMapping(value = "rating/recipe/{recipeId}", method = RequestMethod.GET)
     public String showRecipeRatings(@PathVariable String recipeId, Model model){
         Recipe recipe = recipeService.findRecipeById(Integer.valueOf(recipeId));
         model.addAttribute("recipe", recipe);
@@ -61,11 +57,11 @@ public class RatingController {
         return "rating/show";
     }
 
-    @RequestMapping(value = "recipe/{recipeId}/rating/index", method = RequestMethod.POST)
+    @RequestMapping(value = "rating/recipe/{recipeId}", method = RequestMethod.POST)
     public String newRating(@Valid Rating newRating, BindingResult bindingResult,
                             @PathVariable String recipeId, Model model){
         if(bindingResult.hasErrors()){
-            return "redirect:/recipe/" + recipeId + "/rating/index";
+            return "redirect:/rating/recipe/" + recipeId;
         }
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -91,6 +87,77 @@ public class RatingController {
         recipe.setScore(newScore);
         recipeService.saveRecipe(recipe);
 
-        return "redirect:/recipe/" + recipeId + "/rating/index";
+        return "redirect:/rating/recipe/" + recipeId;
     }
+
+    @RequestMapping(value="/rating/personal", method = RequestMethod.GET)
+    public String allRatingsForLoggedUser(@RequestParam(value = "sortType", required=false)  String sortType, Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+
+            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
+            model.addAttribute("nrOfRecipes", recipes.size());
+
+            List<Rating> ratingsGiven = ratingService.getAllRatingsForLoggedUser(user);
+            List<Rating> ratingsReceived = new ArrayList<Rating>();
+            for (Recipe recipe : recipes
+            ) {
+                List <Rating> ratingsReceivedForRecipe = ratingService.getAllRatingsForRecipe(recipe);
+                if(ratingsReceivedForRecipe != null && ratingsReceivedForRecipe.size()>0){
+                    ratingsReceived.addAll(ratingsReceivedForRecipe);
+                }
+            }
+
+            if (sortType == null)
+            {
+                model.addAttribute("ratings", ratingsGiven);
+                model.addAttribute("nrOfRatings", ratingsGiven.size());
+            }
+            else{
+                if (sortType.equals("Given"))
+                {
+                    model.addAttribute("ratings", ratingsGiven);
+                    model.addAttribute("nrOfRatings", ratingsGiven.size());
+                }
+                else {
+                    if (sortType.equals(new String("Received")))
+                    {
+                        model.addAttribute("ratings", ratingsReceived);
+                        model.addAttribute("nrOfRatings", ratingsReceived.size());
+                    }
+                }
+            }
+
+            return "rating/personal";
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+            return "redirect:/login";
+        }
+    }
+
+    @RequestMapping(value = "/rating/edit/{ratingId}", method = RequestMethod.GET)
+    public String editRating(@PathVariable Integer ratingId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
+        model.addAttribute("newRating", ratingService.findRatingById(ratingId));
+
+        return "/rating/edit";
+    }
+
 }

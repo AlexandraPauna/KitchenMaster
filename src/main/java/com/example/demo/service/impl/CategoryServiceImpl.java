@@ -55,4 +55,14 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    @Override
+    public Category findCategoryById(Integer id) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+
+        if(!categoryOptional.isPresent()){
+            throw new  RuntimeException("Category not found!");
+        }
+        return categoryOptional.get();
+    }
+
 }

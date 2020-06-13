@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Category;
-import com.example.demo.model.Recipe;
-import com.example.demo.model.Role;
-import com.example.demo.model.User;
+import com.example.demo.model.*;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.RatingService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,9 @@ public class RecipeController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RatingService ratingService;
 
     private Map<String, Category> categoryCache;
 
@@ -122,6 +123,10 @@ public class RecipeController {
             List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
             model.addAttribute("recipes", recipes);
             model.addAttribute("nrOfRecipes", recipes.size());
+
+            List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(user);
+            model.addAttribute("nrOfRatings", ratings.size());
+
             return "/recipe/personal";
         }
         else{

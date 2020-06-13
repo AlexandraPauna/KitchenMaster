@@ -214,7 +214,7 @@
                                     <div class="card-content user-info">
                                         <div class="card-body text-center">
                                             <form method="post"  th:object="${newRating}"
-                                                  th:action="@{'/recipe/' + ${recipe.id} + '/rating/index'}">
+                                                  th:action="@{'/rating/recipe/' + ${recipe.id}}">
                                                 <label>Score</label>
                                                 <br />
                                                 <label th:if="${#fields.hasErrors('score')}" th:errors="*{score}"
