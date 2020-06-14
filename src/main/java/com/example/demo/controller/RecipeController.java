@@ -202,7 +202,7 @@ public class RecipeController {
 
         allRecipes(model);
         //model.addAttribute("role",role);
-        return "redirect:/recipe/index";
+        return "redirect:/recipe/personal";
 
     }
 }

@@ -259,7 +259,7 @@
                                                 <h2 class="item-price" th:text="${recipe.calories} + ' KCAL'"></h2>
                                                 <a class="btn btn-danger  btn-sm make-favorite"
                                                    th:if="${loggedUser != null} AND (${role == 'ADMIN'} OR ${recipe.user.userName == loggedUser.userName})"
-                                                   th:href="@{'/recipe/edit/' + ${recipe.id}}" style="margin-bottom:3px;">
+                                                   th:href="@{'/recipe/update/' + ${recipe.id}}" style="margin-bottom:3px;">
 
                                                     <i class="fa fa-certificate"></i>
 
