@@ -39,4 +39,10 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public User saveFirstUsers(User user){
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+        return userRepository.save(user);
+    }
 }
