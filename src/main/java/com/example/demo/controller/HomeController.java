@@ -6,6 +6,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +29,14 @@ public class HomeController {
     @Autowired
     UserService userService;
 
+    private static final Logger logger = Logger.getLogger(HomeController.class);
+
     @RequestMapping(value={"/", "/home/index"}, method = RequestMethod.GET)
-    public String allRecipes(Model model) {
+    public String showHome(Model model) {
+        if(logger.isDebugEnabled()){
+            logger.debug("showHome is executed!");
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         if(user != null){
@@ -37,12 +44,21 @@ public class HomeController {
             model.addAttribute("isAuth", "true");
             String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
             model.addAttribute("role", role);
+            if(logger.isDebugEnabled()){
+                logger.debug("user not logged in!");
+            }
         }
         else{
             model.addAttribute("isAuth", "false");
+            if(logger.isDebugEnabled()){
+                logger.debug("user logged in!");
+            }
         }
 
         List<Category> categories = categoryService.getAllCategories();
+        if(logger.isDebugEnabled()){
+            logger.debug(String.valueOf(categories.size()) + " categories in database!");
+        }
         Collections.sort(categories, new Comparator<Category>() {
             @Override
             public int compare(Category c1, Category c2) {

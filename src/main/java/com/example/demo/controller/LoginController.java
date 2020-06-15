@@ -6,6 +6,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.RatingService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,8 +34,13 @@ public class LoginController {
     @Autowired
     RatingService ratingService;
 
+    private static final Logger logger = Logger.getLogger(LoginController.class);
+
     @GetMapping(value="/login")
     public ModelAndView login(){
+        if(logger.isDebugEnabled()){
+            logger.debug("login is executed!");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         return modelAndView;
@@ -42,6 +48,9 @@ public class LoginController {
 
     @PostMapping(value="/login")
     public ModelAndView loggedUser(){
+        if(logger.isDebugEnabled()){
+            logger.debug("loggedUser is executed!");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/home");
         return modelAndView;
@@ -49,6 +58,9 @@ public class LoginController {
 
     @GetMapping(value="/registration")
     public ModelAndView registration(){
+        if(logger.isDebugEnabled()){
+            logger.debug("registration is executed!");
+        }
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
         modelAndView.addObject("user", user);
@@ -58,6 +70,9 @@ public class LoginController {
 
     @PostMapping(value = "/registration")
     public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult){
+        if(logger.isDebugEnabled()){
+            logger.debug("createNewUser is executed!");
+        }
         ModelAndView modelAndView= new ModelAndView();
         User userExists = userService.findUserByUserName(user.getUserName());
         if(userExists != null){
@@ -91,6 +106,9 @@ public class LoginController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String showProfile(Model model) {
+        if(logger.isDebugEnabled()){
+            logger.debug("showProfile is executed!");
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         if(user != null){

@@ -105,6 +105,17 @@ public class CategoryController {
 
     @RequestMapping(value = "/category/new", method = RequestMethod.GET)
     public String newCategory(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
         Category category = new Category();
         model.addAttribute("category", category);
         return "/category/new";
@@ -125,6 +136,17 @@ public class CategoryController {
 
     @RequestMapping(value = "/category/update/{id}", method = RequestMethod.GET)
     public String updateCategory(Model model,@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
         Category category = categoryService.findById(id);;
         model.addAttribute("category", category);
         return "/category/update";
