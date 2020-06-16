@@ -209,7 +209,7 @@
                                         <div>
 
                                             <p th:if="${role == 'ADMIN'} OR ${recipe.user == loggedUser}">
-                                                <a class="btn btn-success btn-sm"  th:href="@{'/recipe/edit/' + ${recipe.id}}">
+                                                <a class="btn btn-success btn-sm"  th:href="@{'/recipe/update/' + ${recipe.id}}">
                                                     <i class=" fa fa-pen"></i> Edit recipe
                                                 </a>
                                             </p>

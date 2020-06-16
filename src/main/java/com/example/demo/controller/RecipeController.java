@@ -58,7 +58,7 @@ public class RecipeController {
         List<Category> categories = categoryService.getAllCategories();
         categoryCache = new HashMap<String, Category>();
         for (Category category : categories) {
-            categoryCache.put(category.getCategory_id().toString(), category);
+            categoryCache.put(category.getCategoryId().toString(), category);
         }
         model.addAttribute("categoriesList", categoryService.getAllCategories());
 
@@ -88,7 +88,7 @@ public class RecipeController {
 
         Recipe savedRecipe = recipeService.saveRecipe(recipe);
 
-        return "/recipe/index";
+        return "redirect:/recipe/personal";
     }
 
     @InitBinder
@@ -131,7 +131,7 @@ public class RecipeController {
         }
         else{
             model.addAttribute("isAuth", "false");
-            return "/home/index";
+            return "redirect:/home/index";
         }
     }
 
@@ -157,15 +157,26 @@ public class RecipeController {
     @RequestMapping("recipe/{id}/delete")
     public String deleteById(@PathVariable String id){
         recipeService.deleteById(Integer.valueOf(id));
-        return "redirect:/recipe/index";
+        return "redirect:/recipe/personal";
     }
 
     @RequestMapping(value = "/recipe/update/{id}", method = RequestMethod.GET)
     public String updateRecipe(Model model,@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        if(user != null){
+            model.addAttribute("loggedUser", user);
+            model.addAttribute("isAuth", "true");
+            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+            model.addAttribute("role", role);
+        }
+        else{
+            model.addAttribute("isAuth", "false");
+        }
         List<Category> categories = categoryService.getAllCategories();
         categoryCache = new HashMap<String, Category>();
         for (Category category : categories) {
-            categoryCache.put(category.getCategory_id().toString(), category);
+            categoryCache.put(category.getCategoryId().toString(), category);
         }
         model.addAttribute("categoriesList", categoryService.getAllCategories());
 
@@ -202,7 +213,7 @@ public class RecipeController {
 
         allRecipes(model);
         //model.addAttribute("role",role);
-        return "redirect:/recipe/index";
+        return "redirect:/recipe/personal";
 
     }
 }

@@ -41,9 +41,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/ico/**","/css/**", "/js/**","/plugins/**", "/fonts/**", "/webjars/**").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
-                .antMatchers("/registration").permitAll()
+                .antMatchers("/registration", "/h2-console/**").permitAll()
                 .antMatchers("/home/index","/category/index", "/category/show/**","/recipe/show/**","/rating/recipe/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/category/new").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable()
@@ -56,6 +57,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage))
                 .logoutSuccessUrl(loginPage).and().exceptionHandling();
+
+        //for h2 console to show
+        http.headers().frameOptions().disable();
     }
 
     @Override

@@ -38,7 +38,7 @@ public class User {
 
     @Column(name = "password")
     //@Length(min = 5, message = "*Va rugam introduceti o parola de cel putin 5 caractere!")
-    @NotEmpty(message = "*Please provide your passwor!")
+    @NotEmpty(message = "*Please provide your password!")
     @ValidPassword
     private String password;
 

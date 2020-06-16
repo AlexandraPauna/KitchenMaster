@@ -57,7 +57,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a ><i class="icon-home fa"></i></a></li>
                             <li th:each="category : ${recipe.categories}" class="breadcrumb-item" aria-current="page">
-                                <a th:href="@{'/category/show/' + ${category.category_id}}" th:text="${category.name}"></a>
+                                <a th:href="@{'/category/show/' + ${category.categoryId}}" th:text="${category.name}"></a>
                             </li>
                         </ol>
                     </nav>
@@ -75,7 +75,7 @@
                     <span class="date" th:text="${#dates.format(recipe.date, 'dd-MM-yyyy HH:MM')}">
                         <i class=" icon-clock"> </i></span> /
                     <span class="category" th:each="category : ${recipe.categories}"
-                          th:text="${category.name}"></span> /
+                          th:text="${category.name} + ' / '"></span>
 <!--                    <span class="category pull-right"> <i class="icon-eye"></i> Vizualizari: @((Model.Views+1)/2) </span>-->
                 </span>
 

@@ -91,7 +91,7 @@
                                                     th:field="*{categories}">
 
                                                 <option th:each="category : ${categoriesList}"
-                                                        th:value="${category.category_id}"
+                                                        th:value="${category.categoryId}"
                                                         th:text="${category.name}"></option>
                                             </select>
 
@@ -164,7 +164,7 @@
                                     <div class="form-group row">
                                         <label  class="col-sm-3 col-form-label">Description</label>
                                         <div class="col-sm-8">
-                                            <textarea type="text" class="form-control" rows = 9
+                                            <textarea type="text" class="form-control" rows = 9 required="required"
                                                       th:field="*{info.info}"></textarea>
                                         </div>
                                     </div>

@@ -19,14 +19,14 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
-    private Integer category_id;
+    private Integer categoryId;
 
     @Column(name = "name")
     @Length(min = 3, message = "*Category name must have at least 3 characters!")
     @NotEmpty(message = "*Please provide a category name!")
     private String name;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     private Set<Recipe> recipes = new HashSet<Recipe>();
 
     /*public String getIdAsString() {

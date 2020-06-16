@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Profile({"mysql","oracle"})
+@Profile("h2")
 @Configuration
-public class SecurityConfiguration implements WebMvcConfigurer {
+public class SecurityConfigurationH2 implements WebMvcConfigurer {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

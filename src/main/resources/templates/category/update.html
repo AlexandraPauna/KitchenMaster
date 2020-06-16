@@ -58,9 +58,9 @@
                         <div class="row">
                             <div class="col-sm-12">
 
-                                <form th:object="${category}" th:action="@{/category/update/{id}(id=${category.category_id})}" method="post"
+                                <form th:object="${category}" th:action="@{/category/update/{id}(id=${category.categoryId})}" method="post"
                                       class="form-horizontal">
-                                    <input type="hidden" th:field="*{category_id}"/>
+                                    <input type="hidden" th:field="*{categoryId}"/>
 
 
                                     <div class="form-group row">

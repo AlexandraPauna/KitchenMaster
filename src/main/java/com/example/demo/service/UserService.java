@@ -4,6 +4,7 @@ import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,12 @@ public class UserService {
         user.setActive(true);
         Role userRole = roleRepository.findByRole("USER");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+
+        return userRepository.save(user);
+    }
+
+    public User saveFirstUsers(User user){
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
     }
