@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:javascript="http://www.w3.org/1999/xhtml"
-      xmlns:padding-right="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.thymeleaf.org" xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,7 +71,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a th:href="@{'/user/update/' + ${loggedUser.id}}">
+                                                <a  th:href="@{'/user/update/' + ${loggedUser.id}}">
                                                     <i class="icon-pencil"></i>
                                                     Edit Profile
                                                 </a>
@@ -91,13 +90,13 @@
                                     <div class="panel-collapse collapse show" id="MyAds">
                                         <ul class="acc-list">
                                             <li>
-                                                <a th:href="@{/recipe/personal}">
+                                                <a class="active" th:href="@{/recipe/personal}">
                                                     <i class="icon-docs"></i> My Recipes
                                                     <span th:utext="${nrOfRecipes}"></span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="active" th:href="@{/rating/personal}">
+                                                <a th:href="@{/rating/personal}">
                                                     <i class="icon-star"></i> My Ratings
                                                     <span th:utext="${nrOfRatings}"></span>
                                                 </a>
@@ -133,78 +132,97 @@
 
                     </aside>
                 </div>
-                <!--/.page-sidebar-->
-
                 <div class="col-md-9 page-content">
-                    <div class="inner-box">
-                        <h2 class="title-2"><i class="icon-star"></i> Ratings </h2>
-                        <div class="inbox-wrapper">
-                            <div class="row">
-                                <div class="col-md-3 col-lg-2">
-                                    <ul class="nav nav-pills  inbox-nav">
-                                        <li class="nav-item">
-                                            <a th:href="@{/rating/personal?sortType=Given}" class="nav-link">
-                                            Ratings Given
-                                            <span class="badge badge-gray count"></span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a th:href="@{/rating/personal?sortType=Received}" class="nav-link">
-                                            Ratings Received
-                                            </a>
-                                        </li>
+                    <div class="inner-box category-content">
+                        <h2 class="title-2 uppercase"><strong> <i class="icon-docs"></i>Edit profile</strong></h2>
 
-                                    </ul>
-                                </div>
-                                <div class="col-md-9 col-lg-10">
-                                    <div class="message-list">
-                                        <div id="home">
-                                            <div class="list-group">
-                                                <p th:if="${nrOfRatings == 0}">No ratings!</p>
-                                                <div th:if="${nrOfRatings != 0}" th:each="rating : ${ratings}" class="list-group-item">
-                                                    <a class="list-box-user"
-                                                       th:href="@{'/recipe/show/' + ${rating.recipe.id}}">
-                                                    <img th:src="@{/images/chefHat.jpg}" alt="recipe">
-                                                    <span class="name" th:text="${rating.recipe.name}"></span>
-                                                    </a>
+                        <div class="row">
+                            <div class="col-sm-12">
 
-                                                    <a class="list-box-content">
-                                                        <span class="title" th:text="'Score: ' + ${rating.score}"></span>
-                                                        <div class="message-text">
-                                                            <p class="info-row" th:text="${rating.recipe.user.userName}">
-                                                                <span style="font-weight:bold">Recipe posted by:
-                                                                </span></p>
-                                                            <p class="info-row" th:text="${rating.details}">
-                                                                <span style="font-weight:bold">Details:
-                                                                </span></p>
-                                                        </div>
-                                                        <div class="time text-muted"
-                                                             th:text="${#dates.format(rating.date, 'dd-MM-yyyy HH:MM')}">
-                                                        </div>
-                                                    </a>
+                                <form th:object="${loggedUser}" th:action="@{/user/update/{id}(id=${loggedUser.id})}" method="post"
+                                      class="form-horizontal">
+                                    <input type="hidden" th:field="*{id}"/>
+                                    <input type="hidden" th:field="*{password}">
+                                    <input type="hidden" th:field="*{email}">
 
-                                                    <div class="list-box-action">
-                                                        <a th:if="${rating.user.id} == ${loggedUser}" class="markAsRead"
-                                                           data-toggle="tooltip" data-placement="top"
-                                                           th:href="@{'/rating/edit' + ${rating.id}}" title="Edit">
-                                                            <i class=" fas fa-pencil"></i>Edit</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
+                                    <div class="form-group row">
+                                        <label  class="col-sm-3 col-form-label">User name</label>
+                                        <div class="col-sm-8">
+                                            <label th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"
+                                                   class="validation-message"></label>
+                                            <input type="text" class="form-control" th:field="*{userName}" />
                                         </div>
                                     </div>
-                                    <div class="pagination-bar text-center">
+
+                                    <div class="form-group row">
+                                        <label  class="col-sm-3 col-form-label">First name</label>
+                                        <div class="col-sm-8">
+                                            <label th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                                                   class="validation-message"></label>
+                                            <input type="text" class="form-control" th:field="*{firstName}" />
+                                        </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label  class="col-sm-3 col-form-label">Last name</label>
+                                        <div class="col-sm-8">
+                                            <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                                                   class="validation-message"></label>
+                                            <input type="text" class="form-control" th:field="*{lastName}" />
+                                        </div>
+                                    </div>
+
+                                    <br/>
+                                    <div align="center" class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-success btn-lg">Save changes</button>
+                                            <!--                                            <a href="posting-success.html" id="button1id"-->
+                                            <!--                                                                 class="btn btn-success btn-lg">Submit</a>-->
+                                        </div>
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.page-content -->
+
+                <div class="col-md-3 reg-sidebar">
+                    <div class="reg-sidebar-inner text-center">
+                        <div class="promo-text-box"><i class=" icon-food fa fa-4x icon-color-1"></i>
+
+                            <h3><strong>Post your favorite Recipe</strong></h3>
+
+                            <p> Post your delicious recipe with us. Make sure you make your chef skills
+                                are acknowledged by everyone!</p>
+                        </div>
+
+                        <div class="card sidebar-card">
+                            <div class="card-header uppercase">
+                                <small><strong>How to make your recipe successful?</strong></small>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body text-left">
+                                    <ul class="list-check">
+                                        <li> Use a brief title of the recipe</li>
+                                        <li> Make sure you post in the correct category</li>
+                                        <li> Add nice photos</li>
+                                        <li> Check the recipe before publish</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <!--/. inbox-wrapper-->
+
+
                     </div>
                 </div>
-                <!--/.page-content-->
+                <!--/.reg-sidebar-->
             </div>
-            <!--/.row-->
+            <!-- /.row -->
         </div>
         <!-- /.container -->
     </div>
