@@ -13,10 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -137,19 +134,24 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         if(user != null){
-            model.addAttribute("loggedUser", user);
-            model.addAttribute("isAuth", "true");
-            String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
-            model.addAttribute("role", role);
+            if(user.getId() != Integer.valueOf(id)){
+                return "redirect:/home/index";
+            }
+            else{
+                model.addAttribute("loggedUser", user);
+                model.addAttribute("isAuth", "true");
+                String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
+                model.addAttribute("role", role);
 
-            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("nrOfRecipes", recipes.size());
+                List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(user);
+                model.addAttribute("recipes", recipes);
+                model.addAttribute("nrOfRecipes", recipes.size());
 
-            List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(user);
-            model.addAttribute("nrOfRatings", ratings.size());
+                List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(user);
+                model.addAttribute("nrOfRatings", ratings.size());
 
-            return "/user/update";
+                return "/user/update";
+            }
         }
         else{
             model.addAttribute("isAuth", "false");

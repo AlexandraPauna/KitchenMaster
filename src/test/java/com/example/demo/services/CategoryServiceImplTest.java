@@ -32,7 +32,7 @@ public class CategoryServiceImplTest {
     public void findCategories() {
         List<Category> categoriesRet = new ArrayList<Category>();
         Category category = new Category();
-        category.setCategory_id(100);
+        category.setCategoryId(100);
         category.setName("Testing");
         categoriesRet.add(category);
 

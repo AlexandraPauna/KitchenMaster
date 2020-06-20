@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -81,9 +83,9 @@ public class RatingController {
             sumRatings += rt.getScore();
         }
 
-        Double average = (double) (sumRatings / nrOfRatings);
-        DecimalFormat newFormat = new DecimalFormat("#.##");
-        Double newScore =  Double.valueOf(newFormat.format(average));
+        Double average = ((double)sumRatings / (double)nrOfRatings);
+        Double newScore = Double.valueOf(new BigDecimal(average).setScale(2, RoundingMode.HALF_UP).doubleValue());
+
         recipe.setScore(newScore);
         recipeService.saveRecipe(recipe);
 

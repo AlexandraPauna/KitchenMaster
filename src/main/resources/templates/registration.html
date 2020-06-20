@@ -110,7 +110,7 @@
                                         <label class = "col-md-4 control-label">Last Name</label>
                                         <div class="col-md-8">
                                             <input type="text" th:field="*{lastName}" class="form-control"/>
-                                            <label th:if="${#fields.hasErrors('lastName')}" th:errors="lastName"
+                                            <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
                                                    class="validation-message"></label>
                                         </div>
                                     </div>

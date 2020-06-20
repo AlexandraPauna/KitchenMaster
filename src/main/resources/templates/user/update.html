@@ -65,13 +65,13 @@
                                     <div class="panel-collapse collapse show" id="MyClassified">
                                         <ul class="acc-list">
                                             <li>
-                                                <a th:href="@{/manage/index}">
+                                                <a th:href="@{/profile}">
                                                     <i class="icon-home"></i>
                                                     My Profile
                                                 </a>
                                             </li>
                                             <li>
-                                                <a  th:href="@{'/user/update/' + ${loggedUser.id}}">
+                                                <a class="active" th:href="@{'/user/update/' + ${loggedUser.id}}">
                                                     <i class="icon-pencil"></i>
                                                     Edit Profile
                                                 </a>
@@ -90,7 +90,7 @@
                                     <div class="panel-collapse collapse show" id="MyAds">
                                         <ul class="acc-list">
                                             <li>
-                                                <a class="active" th:href="@{/recipe/personal}">
+                                                <a th:href="@{/recipe/personal}">
                                                     <i class="icon-docs"></i> My Recipes
                                                     <span th:utext="${nrOfRecipes}"></span>
                                                 </a>

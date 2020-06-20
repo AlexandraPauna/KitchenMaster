@@ -40,7 +40,7 @@
                                     <i class="icon-home"></i> My profile</a>
                             </li>
                             <li th:if="${role == 'USER'}" class="dropdown-item" >
-                                <a th:href="@{/manage/profile}">
+                                <a th:href="@{'/user/update/' + ${loggedUser.id}}">
                                     <i class="icon-pencil"></i> Edit profile </a>
                             </li>
                             <li th:if="${role == 'USER'}" class="dropdown-item" >
