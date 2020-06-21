@@ -139,6 +139,7 @@ public class LoginController {
             }
             else{
                 model.addAttribute("loggedUser", user);
+                model.addAttribute("user",user);
                 model.addAttribute("isAuth", "true");
                 String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
                 model.addAttribute("role", role);
@@ -162,36 +163,47 @@ public class LoginController {
 
 
     @PostMapping(value = "/user/update/{id}")
-    public String updateUser( @Valid User user, BindingResult result,Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = userService.findUserByUserName(auth.getName());
-        currentUser.setUserName (user.getUserName());
-        currentUser.setFirstName(user.getFirstName());
-        currentUser.setLastName(user.getLastName());
-        currentUser.setEmail(user.getEmail());
-        currentUser.setPassword(currentUser.getPassword());
-        userService.updateUser(currentUser);
-        if(currentUser != null){
-            model.addAttribute("loggedUser", currentUser);
-            model.addAttribute("isAuth", "true");
-            String role = currentUser.getRoles().stream().findFirst().get().getRole().toUpperCase();
-            model.addAttribute("role", role);
-
-            List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(currentUser);
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("nrOfRecipes", recipes.size());
-
-            List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(currentUser);
-            model.addAttribute("nrOfRatings", ratings.size());
+    public String updateUser(@PathVariable("id") int id, @Valid User user, BindingResult bindingResult, Model model) {
+        if(logger.isDebugEnabled()){
+            logger.debug("updating is executed!");
         }
-        else{
-            model.addAttribute("isAuth", "false");
-            //return "/home/index";
-        }
-        if (result.hasErrors()){
+        if (bindingResult.hasErrors()){
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user2 = userService.findUserByUserName(auth.getName());
+            model.addAttribute("loggedUser", user2);
+
             return "/user/update";
         }
-        return "/user/update";
+        else
+        {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = userService.findUserByUserName(auth.getName());
+            currentUser.setUserName (user.getUserName());
+            currentUser.setFirstName(user.getFirstName());
+            currentUser.setLastName(user.getLastName());
+            currentUser.setEmail(user.getEmail());
+            currentUser.setPassword(currentUser.getPassword());
+            userService.updateUser(currentUser);
+            if(currentUser != null){
+                model.addAttribute("loggedUser", currentUser);
+                model.addAttribute("isAuth", "true");
+                String role = currentUser.getRoles().stream().findFirst().get().getRole().toUpperCase();
+                model.addAttribute("role", role);
+
+                List<Recipe> recipes = recipeService.getAllRecipesForLoggedUser(currentUser);
+                model.addAttribute("recipes", recipes);
+                model.addAttribute("nrOfRecipes", recipes.size());
+
+                List<Rating> ratings = ratingService.getAllRatingsForLoggedUser(currentUser);
+                model.addAttribute("nrOfRatings", ratings.size());
+            }
+            else{
+                model.addAttribute("isAuth", "false");
+                //return "/home/index";
+            }
+            return "/profile";
+        }
+
 
     }
 

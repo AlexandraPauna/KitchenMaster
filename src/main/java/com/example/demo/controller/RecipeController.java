@@ -188,6 +188,14 @@ public class RecipeController {
     @PostMapping(value = "/recipe/update/{id}")
     public String updateRecipe(@PathVariable("id") int id,@Valid Recipe recipe,
                                  BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            if(recipe.getCategories() != null){
+                model.addAttribute("categories", recipe.getCategories());
+            }
+            model.addAttribute("categoriesList", categoryService.getAllCategories());
+
+            return "/recipe/update";
+        }
         Recipe currentRecipe = recipeService.findRecipeById(id);
         currentRecipe.setName(recipe.getName());
         currentRecipe.setScore(recipe.getScore());
@@ -209,7 +217,6 @@ public class RecipeController {
         if (result.hasErrors()){
             return "/recipe/update";
         }
-
 
         allRecipes(model);
         //model.addAttribute("role",role);

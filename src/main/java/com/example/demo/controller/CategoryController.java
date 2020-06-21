@@ -3,24 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.model.Category;
 import com.example.demo.model.Recipe;
 import com.example.demo.model.User;
-import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.RecipeService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -124,7 +123,7 @@ public class CategoryController {
     @RequestMapping(value = "/category/new", method = RequestMethod.POST)
     public String savedCategory(@Valid Category category, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "error";
+            return "/category/new";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
@@ -173,13 +172,14 @@ public class CategoryController {
 
     @PostMapping(value = "/category/update/{id}")
     public String updateCategory(@PathVariable("id") int id,@Valid Category category,
-                                 BindingResult result, Model model) {
+                                 BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()){
+            return "/category/update";
+        }
         Category currentCategory = categoryService.findById(id);
         currentCategory.setName(category.getName());
         categoryService.updateCategory(currentCategory);
-        if (result.hasErrors()){
-            return "/category/update";
-        }
+
         categoryService.updateCategory(currentCategory);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
