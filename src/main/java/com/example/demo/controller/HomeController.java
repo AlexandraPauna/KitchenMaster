@@ -45,13 +45,13 @@ public class HomeController {
             String role = user.getRoles().stream().findFirst().get().getRole().toUpperCase();
             model.addAttribute("role", role);
             if(logger.isDebugEnabled()){
-                logger.debug("user not logged in!");
+                logger.debug("user logged in!");
             }
         }
         else{
             model.addAttribute("isAuth", "false");
             if(logger.isDebugEnabled()){
-                logger.debug("user logged in!");
+                logger.debug("user not logged in!");
             }
         }
 
